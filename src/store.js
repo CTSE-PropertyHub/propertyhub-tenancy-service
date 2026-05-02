@@ -9,7 +9,7 @@ const tenancySchema = new mongoose.Schema(
     startDate:   { type: String, required: true },
     endDate:     { type: String, default: null },
     monthlyRent: { type: Number, required: true },
-    status:      { type: String, default: 'PENDING', enum: ['PENDING', 'ACTIVE', 'TERMINATED', 'EXPIRED'] },
+    status:      { type: String, default: 'PENDING', enum: ['PENDING', 'ACTIVE', 'REJECTED', 'TERMINATED', 'EXPIRED'] },
   },
   { timestamps: true }
 );
