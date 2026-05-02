@@ -16,21 +16,27 @@ const tenancySchema = new mongoose.Schema(
 
 const Tenancy = mongoose.model('Tenancy', tenancySchema);
 
+function toDoc(doc) {
+  if (!doc) return null;
+  const { _id, __v, ...rest } = doc;
+  return { id: _id, ...rest };
+}
+
 async function getAll() {
-  return Tenancy.find().lean();
+  return Tenancy.find().lean().then(docs => docs.map(toDoc));
 }
 
 async function getById(id) {
-  return Tenancy.findById(id).lean();
+  return Tenancy.findById(id).lean().then(toDoc);
 }
 
 async function create(data) {
   const doc = await Tenancy.create({ _id: data.id, ...data });
-  return doc.toObject();
+  return toDoc(doc.toObject());
 }
 
 async function update(id, updates) {
-  return Tenancy.findByIdAndUpdate(id, updates, { new: true }).lean();
+  return Tenancy.findByIdAndUpdate(id, updates, { new: true }).lean().then(toDoc);
 }
 
 async function remove(id) {
