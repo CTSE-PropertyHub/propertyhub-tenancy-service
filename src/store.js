@@ -9,7 +9,7 @@ const tenancySchema = new mongoose.Schema(
     startDate:   { type: String, required: true },
     endDate:     { type: String, default: null },
     monthlyRent: { type: Number, required: true },
-    status:      { type: String, default: 'PENDING', enum: ['PENDING', 'ACTIVE', 'REJECTED', 'TERMINATED', 'EXPIRED'] },
+    status:      { type: String, default: 'PENDING', enum: ['PENDING', 'ACTIVE', 'REJECTED', 'COMPLETED', 'TERMINATED', 'EXPIRED'] },
   },
   { timestamps: true }
 );
@@ -43,4 +43,12 @@ async function remove(id) {
   await Tenancy.findByIdAndDelete(id);
 }
 
-module.exports = { getAll, getById, create, update, remove };
+// Rejects all PENDING tenancies for a property except the one being approved.
+async function rejectOtherPending(propertyId, excludeId) {
+  await Tenancy.updateMany(
+    { propertyId, status: 'PENDING', _id: { $ne: excludeId } },
+    { $set: { status: 'REJECTED' } }
+  );
+}
+
+module.exports = { getAll, getById, create, update, remove, rejectOtherPending };
