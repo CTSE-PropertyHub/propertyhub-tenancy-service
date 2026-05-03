@@ -42,7 +42,6 @@ async function fetchProperty(propertyId, userId, userRole) {
 }
 
 // Updates the property status via the property service.
-// Uses the landlordId stored on the tenancy so the property service authorises the call.
 async function updatePropertyStatus(propertyId, status, landlordId) {
   try {
     await fetch(`${PROPERTY_SERVICE_URL}/properties/${encodeURIComponent(propertyId)}/status`, {
